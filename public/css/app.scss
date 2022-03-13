@@ -1,0 +1,64 @@
+@import "bootstrap";
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Nunito', sans-serif;
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
+body{
+  background-color: #333333;
+}
+
+.black-opacity{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: black;
+  opacity: 0.7;
+}
+
+nav{
+  padding: 15px 20px;
+  background-color: #222222;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  
+  .navbar-brand{
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+
+  ul {
+    margin: 0;
+    list-style: none;
+    display: flex;
+    gap: 15px;
+
+    li {
+      a:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  a {
+    color: #efefef;
+    text-decoration: none;
+    transition: 0.4s;
+  }
+}
