@@ -14,7 +14,7 @@
       <p>
         Here you can find the car of your dreams.
       </p>
-      <a href="#product-list"><span>Take a look</span></a>
+      <a class="cta-button" href="#product-list"><span>Take a look</span></a>
     </div>
   </div>
   <section id="product-list">

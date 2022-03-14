@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 
+use File;
+
 class ProductController extends Controller
 {
     public function __construct()
@@ -39,7 +41,39 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $dataForm = $request->except('_token');
+        $product = new Product;
+        $this->validate($request, $product->rules, $product->messages);
+
+        $imgNewName = null;
+        if($request->hasFile('image')){
+            $fileName = $request->file('image')->getClientOriginalName();
+            $exploded = explode('.', $fileName);
+            $ext = strtolower(end($exploded));
+            $imgNewName = md5(time()) . '.' . $ext;
+            $request['imgNewName'] = $imgNewName;
+            $this->saveImage($request);
+        } else {
+            $imgNewName = 'no-image.png';
+        }
+        $dataForm['image'] = $imgNewName;
+
+
+        $insert = Product::create($dataForm);
+        if($insert)
+            return redirect()->route('products.index');
+        else
+            return redirect()->route('products.create');
+    }
+
+    public function saveImage($request)
+    {
+        $file = $request->file('image');
+        
+        if($request->hasFile('image') && $file->isValid()) {
+            $imgNewName = $request['imgNewName'];
+            $file->move('products-images', $imgNewName);
+        }
     }
 
     /**
@@ -75,7 +109,34 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $oldProduct = Product::find($id);
+        $dataForm = $request->except('_token');
+        $product = new Product;
+        $this->validate($request, $product->rules, $product->messages);
+
+        $imgNewName = $oldProduct->image;
+        if($request->hasFile('image')){
+            // dd($oldProduct->image);
+            $fileName = $request->file('image')->getClientOriginalName();
+            $exploded = explode('.', $fileName);
+            $ext = strtolower(end($exploded));
+            $imgNewName = md5(time()) . '.' . $ext;
+            $request['imgNewName'] = $imgNewName;
+            $this->saveImage($request);
+            
+            $fileName = "products-images/{$oldProduct->image}";
+            File::delete($fileName);
+        }
+        $dataForm['image'] = $imgNewName;
+
+        // dd($imgNewName);
+
+
+        $update = $oldProduct->update($dataForm);
+        if($update)
+            return redirect()->route('products.index');
+        else
+            return back();
     }
 
     /**
@@ -86,7 +147,11 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        return 'destroy';
+        $product = Product::find($id);
+        $fileName = "products-images/{$product->getAttributes()['image']}";
+        File::delete($fileName);
+        Product::destroy($id);
+        return back();
     }
 
     public function listProducts($admin)
