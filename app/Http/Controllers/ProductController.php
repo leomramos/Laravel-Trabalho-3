@@ -124,8 +124,10 @@ class ProductController extends Controller
             $request['imgNewName'] = $imgNewName;
             $this->saveImage($request);
             
-            $fileName = "products-images/{$oldProduct->image}";
-            File::delete($fileName);
+            if($oldProduct->image != 'no-image.png') {
+                $fileName = "products-images/{$oldProduct->image}";
+                File::delete($fileName);
+            }
         }
         $dataForm['image'] = $imgNewName;
 
