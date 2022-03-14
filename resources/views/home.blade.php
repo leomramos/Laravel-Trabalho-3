@@ -24,6 +24,7 @@
     <p>
       We've got you!
     </p>
+    {!! app('App\Http\Controllers\ProductController')->listProducts(false) !!}
   </section>
 </home>
 @endsection

@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Product;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only(['create', 'store', 'edit', 'update', 'destroy']);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -45,7 +50,8 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        return view('product', compact($id));
+        $product = Product::find($id);
+        return view('product', compact('product'));
     }
 
     /**
@@ -56,7 +62,8 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        return view('edit', compact($id));
+        $product = Product::find($id);
+        return view('edit', compact('product'));
     }
 
     /**
@@ -80,5 +87,12 @@ class ProductController extends Controller
     public function destroy($id)
     {
         return 'destroy';
+    }
+
+    public function listProducts($admin)
+    {
+        $products = Product::paginate(3);
+        $products->adminMode = $admin;
+        return view('layouts\productsPagination', compact('products'));
     }
 }

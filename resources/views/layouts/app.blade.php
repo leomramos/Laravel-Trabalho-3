@@ -7,7 +7,10 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }} - @yield('page')</title>
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -18,14 +21,14 @@
 </head>
 <body>
     <div id="app">
-        <nav>
-            <a class="navbar-brand" href="{{ route('home') }}">
+        <nav id="header-navigation">
+            <a class="navbar-brand" href="{{ url('/') }}">
                 {{ config('app.name', 'Laravel') }}
             </a>
 
-            <ul id="navbar">
+            <ul>
                 <li>
-                    <a href="{{ route('home') }}">Home</a>
+                    <a href="{{ route('home') }}">{{ __('Home') }}</a>
                 </li>
                 @guest
                     @if (Route::has('login'))
@@ -41,29 +44,24 @@
                     @endif
                 @else
                     <li>
-                        <a href="{{ route('products.index') }}">Products</a>
+                        <a href="{{ route('products.index') }}">{{ __('Products') }}</a>
                     </li>
-                    <li class="dropdown">
-                        <a id="navbarDropdown" class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            {{ Auth::user()->name }}
+                    <li>
+                        <a href="{{ route('logout') }}"
+                            onclick="event.preventDefault();
+                                            document.getElementById('logout-form').submit();">
+                            {{ __('Logout') }}
                         </a>
 
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ route('logout') }}"
-                                onclick="event.preventDefault();
-                                                document.getElementById('logout-form').submit();">
-                                {{ __('Logout') }}
-                            </a>
-
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-                        </div>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
                     </li>
                 @endguest
             </ul>
-        </nav> 
-        <main class="content">
+        </nav>
+
+        <main class="py-4">
             @yield('content')
         </main>
     </div>
